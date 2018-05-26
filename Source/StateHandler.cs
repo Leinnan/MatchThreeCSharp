@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -55,7 +57,18 @@ namespace MonoGameCore {
             m_states.Find(x => x.Id.Equals(startState)).OnEnter();
             m_curState = startState;
         }
+        public void Draw(ref SpriteBatch spriteBatch)
+        {
+            m_states.Find(x => x.Id.Equals(m_curState)).m_screen.Draw(ref spriteBatch);
+        }
 
+        public void LoadAssets(ContentManager content)
+        {
+            foreach(var state in m_states)
+            {
+                state.m_screen.OnLoad(content);
+            }
+        }
         public bool IsRequestingGameExit(){ return m_exitGameRequest; }
     }
 }

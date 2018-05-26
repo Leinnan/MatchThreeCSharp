@@ -11,6 +11,7 @@ namespace MonoGameCore {
 
         Vector2 m_pressedMousePos;
         Vector2 m_mousePos;
+        public Screen m_screen;
 
         public abstract void OnInit();
         public abstract void OnShutdown();
@@ -32,6 +33,7 @@ namespace MonoGameCore {
         }
         public bool IsRequestingGameExit(){ return m_exitGameRequest; }
         public void RequestGameExit(){ m_exitGameRequest = true; }
+        public ref Screen GetScreen(){return ref m_screen;}
 
         protected void HandleKeyboard () {
             List<Keys> pressedKeys = new List<Keys> (Keyboard.GetState ().GetPressedKeys ());

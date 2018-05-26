@@ -12,6 +12,7 @@ namespace MonoGameCore {
         public override void OnInit()
         {
             Console.WriteLine("OnInit"); 
+            m_screen = new GameScreen();
         }
         public override void OnShutdown()
         {

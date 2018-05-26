@@ -29,6 +29,7 @@ namespace MonoGameCore {
         }
 
         protected override void LoadContent () {
+            m_stateHandler.LoadAssets(Content);
             spriteBatch = new SpriteBatch (GraphicsDevice);
         }
 
@@ -42,6 +43,7 @@ namespace MonoGameCore {
         protected override void Draw (GameTime gameTime) {
             GraphicsDevice.Clear (Color.Gray);
             spriteBatch.Begin ();
+            m_stateHandler.Draw( ref spriteBatch );
             spriteBatch.End ();
             base.Draw (gameTime);
         }
