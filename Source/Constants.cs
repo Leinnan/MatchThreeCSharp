@@ -2,10 +2,12 @@ namespace MonoGameCore
 {
     public static class Constants
     {
-        public const string GAME_NAME = "SweetSaper";
+        public const string GAME_NAME = "MatchThree";
         public const int BOARD_SIZE = 10;
         public const int FIELD_SIZE = 30;
         public const bool DEBUG_INFO = false;
+        public const int SCREEN_WIDTH = 480;
+        public const int SCREEN_HEIGHT = 800;
 
         public static readonly string[] FIELDS_PATH = {
             "gfx/symbol_0",

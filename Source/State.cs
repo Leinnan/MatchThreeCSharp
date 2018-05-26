@@ -7,6 +7,7 @@ namespace MonoGameCore {
         public abstract string Id { get; }
         List<Keys> m_holdedKeys = new List<Keys> ();
         MouseState m_prevMouseState;
+        private bool m_exitGameRequest = false;
 
         Vector2 m_pressedMousePos;
         Vector2 m_mousePos;
@@ -18,17 +19,19 @@ namespace MonoGameCore {
         public abstract void OnQuit();
 
         // input handling
-        public void OnKeyPressed (Keys pressedKey) {}
-        public void OnKeyHold (Keys holdedKey) {}
-        public void OnKeyReleased (Keys releasedKey) {}
-        public void OnMousePressed (Vector2 mousePos) {}
-        public void OnMouseHold (Vector2 mousePos, Vector2 movement) {}
-        public void OnMouseReleased (Vector2 mousePos, Vector2 movement) {}
+        public virtual void OnKeyPressed (Keys pressedKey) {}
+        public virtual void OnKeyHold (Keys holdedKey) {}
+        public virtual void OnKeyReleased (Keys releasedKey) {}
+        public virtual void OnMousePressed (Vector2 mousePos) {}
+        public virtual void OnMouseHold (Vector2 mousePos, Vector2 movement) {}
+        public virtual void OnMouseReleased (Vector2 mousePos, Vector2 movement) {}
 
         public void HandleInput () {
             HandleKeyboard ();
             HandleMouse ();
         }
+        public bool IsRequestingGameExit(){ return m_exitGameRequest; }
+        public void RequestGameExit(){ m_exitGameRequest = true; }
 
         protected void HandleKeyboard () {
             List<Keys> pressedKeys = new List<Keys> (Keyboard.GetState ().GetPressedKeys ());
