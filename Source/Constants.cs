@@ -9,6 +9,7 @@ namespace MonoGameCore
         public const int SCREEN_WIDTH = 480;
         public const int SCREEN_HEIGHT = 800;
 
+        public const string INGAME_BG = "gfx/bg";
         public static readonly string[] FIELDS_PATH = {
             "gfx/symbol_0",
             "gfx/symbol_1",
