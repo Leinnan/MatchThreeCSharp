@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace MonoGameCore {
     public abstract class Screen{
         
-        public abstract void OnLoad(ContentManager content);
-        public abstract void OnUnload(ContentManager content);
+        public abstract void OnLoad(ContentManager content, GraphicsDevice graphics);
+        public abstract void OnUnload(ContentManager content, GraphicsDevice graphics);
         public abstract void Draw(ref SpriteBatch spriteBatch);
         
     }

@@ -29,7 +29,7 @@ namespace MonoGameCore {
         }
 
         protected override void LoadContent () {
-            m_stateHandler.LoadAssets(Content);
+            m_stateHandler.LoadAssets(Content, GraphicsDevice);
             spriteBatch = new SpriteBatch (GraphicsDevice);
         }
 

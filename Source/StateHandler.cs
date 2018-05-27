@@ -62,11 +62,11 @@ namespace MonoGameCore {
             m_states.Find(x => x.Id.Equals(m_curState)).m_screen.Draw(ref spriteBatch);
         }
 
-        public void LoadAssets(ContentManager content)
+        public void LoadAssets(ContentManager content, GraphicsDevice graphics)
         {
             foreach(var state in m_states)
             {
-                state.m_screen.OnLoad(content);
+                state.m_screen.OnLoad(content, graphics);
             }
         }
         public bool IsRequestingGameExit(){ return m_exitGameRequest; }
