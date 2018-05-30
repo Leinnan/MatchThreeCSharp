@@ -24,13 +24,13 @@ namespace MonoGameCore {
             m_stateHandler = new StateHandler();
             GameState gameState = new GameState();
             m_stateHandler.RegisterState(new GameState());
-            m_stateHandler.Start("GameState");
             base.Initialize ();
         }
 
         protected override void LoadContent () {
-            m_stateHandler.LoadAssets(Content);
+            m_stateHandler.LoadAssets(Content, GraphicsDevice);
             spriteBatch = new SpriteBatch (GraphicsDevice);
+            m_stateHandler.Start("GameState");
         }
 
         protected override void Update (GameTime gameTime) {

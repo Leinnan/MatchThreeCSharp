@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
@@ -8,16 +10,19 @@ namespace MonoGameCore {
         List<Keys> m_holdedKeys = new List<Keys> ();
         MouseState m_prevMouseState;
         private bool m_exitGameRequest = false;
+        private bool m_inputEnabled = true;
 
         Vector2 m_pressedMousePos;
         Vector2 m_mousePos;
-        public Screen m_screen;
 
         public abstract void OnInit();
         public abstract void OnShutdown();
         public abstract void OnUpdate(GameTime gameTime);
         public abstract void OnEnter();
         public abstract void OnQuit();
+        public abstract void OnLoad(ContentManager content, GraphicsDevice graphics);
+        public abstract void OnUnload(ContentManager content, GraphicsDevice graphics);
+        public abstract void OnDraw(ref SpriteBatch spriteBatch);
 
         // input handling
         public virtual void OnKeyPressed (Keys pressedKey) {}
@@ -28,12 +33,16 @@ namespace MonoGameCore {
         public virtual void OnMouseReleased (Vector2 mousePos, Vector2 movement) {}
 
         public void HandleInput () {
+            if(!m_inputEnabled)
+                return;
             HandleKeyboard ();
             HandleMouse ();
         }
         public bool IsRequestingGameExit(){ return m_exitGameRequest; }
         public void RequestGameExit(){ m_exitGameRequest = true; }
-        public ref Screen GetScreen(){return ref m_screen;}
+        public bool IsInputEnabled(){ return m_inputEnabled; }
+        public void EnableInput(){ m_inputEnabled = true; }
+        public void DisableInput(){ m_inputEnabled = false; }
 
         protected void HandleKeyboard () {
             List<Keys> pressedKeys = new List<Keys> (Keyboard.GetState ().GetPressedKeys ());

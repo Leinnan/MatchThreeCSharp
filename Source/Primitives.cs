@@ -3,35 +3,31 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameCore
 {
-    public class MyRectangle
+    public class FilledRectangle
     {
-        Vector2 m_size;
-        Vector2 m_pos;
-        Color m_color;
+        Rectangle m_rect;
         Color[] m_data;
-        Texture2D m_rect;
-        public MyRectangle(Vector2 pos, Vector2 size, Color color)
+        Texture2D m_txt;
+        public FilledRectangle(Vector2 pos, Vector2 size, Color color)
         {
-            m_pos = pos;
-            m_size = size;
-            m_color = color;
-            m_data = new Color[(int)pos.X * (int)pos.Y];
+            m_rect = new Rectangle((int)pos.X, (int)pos.Y, (int)size.X, (int)size.Y);
+            m_data = new Color[]{color};
         }
-        public void GenerateTexture(ref GraphicsDeviceManager graphics)
+        public void GenerateTexture(GraphicsDevice graphics)
         {
-            m_rect = new Texture2D(graphics.GraphicsDevice, (int)m_pos.X, (int)m_pos.Y);
-            for(int i=0; i < m_data.Length; ++i) m_data[i] = m_color;
-                m_rect.SetData(m_data);
+            m_txt = new Texture2D(graphics, 1, 1);
+            m_txt.SetData(m_data);
         }
 
         public void Move(Vector2 movement)
         {
-            m_pos += movement;
+            m_rect.X += (int)movement.X;
+            m_rect.Y += (int)movement.Y;
         }
 
         public void Draw(ref SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(m_rect,m_pos,Color.White);
+            spriteBatch.Draw(m_txt,m_rect,Color.White);
         }
     }
 }
