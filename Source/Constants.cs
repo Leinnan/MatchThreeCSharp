@@ -9,14 +9,6 @@ namespace MonoGameCore
         public const int SCREEN_HEIGHT = 800;
         public const int SYMBOLS_TYPES_AMOUNT = 8;
 
-        public enum GAME_SUBSTATE {
-            IDLE,
-            SWAPING,
-            WINING,
-            SWAPING_BACK,
-            DROPPING
-        }
-
         public const string INGAME_BG = "gfx/bg";
         public static readonly string[] SYMBOLS_PATH = {
             "gfx/symbol_0",

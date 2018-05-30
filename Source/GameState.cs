@@ -9,12 +9,23 @@ namespace MonoGameCore {
     public sealed class GameState : State {
         public override string Id { get{return "GameState";} }
 
+        public enum Substate {
+            IDLE,
+            SWAPING,
+            WINING,
+            SWAPING_BACK,
+            DROPPING
+        }
+
         private SpriteFont font;
         private Texture2D background;
         public Board m_board;
         public int m_score;
-
+        private Substate m_currentSubstate = Substate.IDLE;
+        
         public GameState(){}
+
+        public void SwitchState( Substate newSubstate ){ m_currentSubstate = newSubstate; }
 
         public override void OnInit()
         {
@@ -27,6 +38,17 @@ namespace MonoGameCore {
         public override void OnUpdate(GameTime gameTime)
         {
             Console.WriteLine("OnUpdate"); 
+            switch(m_currentSubstate)
+            {
+                case Substate.IDLE:
+                {
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
         }
         public override void OnEnter()
         {
