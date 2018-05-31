@@ -3,12 +3,19 @@ namespace MonoGameCore
     public static class Constants
     {
         public const string GAME_NAME = "MatchThree";
-        public const int BOARD_SIZE = 12;
-        public const int FIELD_SIZE = 32;
+
         public const int SCREEN_WIDTH = 480;
         public const int SCREEN_HEIGHT = 800;
-        public const int SYMBOLS_TYPES_AMOUNT = 8;
 
+        public const int SYMBOLS_TYPES_AMOUNT = 8;
+        public const int SYMBOL_GFX_SIZE = 32;
+
+        public const int BOARD_SIZE = 12;
+        public const int BOARD_LENGTH = 394;
+        public const int BOARD_POS_X = (SCREEN_WIDTH - BOARD_LENGTH) / 2;
+        public const int BOARD_POS_Y = 50;
+
+        public const string SWIPE_SOUND = "sfx/swipeEffect";
         public const string INGAME_BG = "gfx/bg";
         public static readonly string[] SYMBOLS_PATH = {
             "gfx/symbol_0",

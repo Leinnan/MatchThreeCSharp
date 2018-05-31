@@ -224,3 +224,9 @@
 /processorParam:TextureFormat=Color
 /build:gfx/bg.png
 
+#begin sfx/swipeEffect.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/swipeEffect.ogg
+
