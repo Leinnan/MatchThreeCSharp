@@ -10,6 +10,7 @@ namespace MonoGameCore {
         List<Keys> m_holdedKeys = new List<Keys> ();
         MouseState m_prevMouseState;
         private bool m_exitGameRequest = false;
+        private string m_requestedStateChange = "";
         private bool m_inputEnabled = true;
 
         Vector2 m_pressedMousePos;
@@ -40,6 +41,21 @@ namespace MonoGameCore {
         }
         public bool IsRequestingGameExit(){ return m_exitGameRequest; }
         public void RequestGameExit(){ m_exitGameRequest = true; }
+
+        public bool IsRequestingStateChange()
+        {
+            return m_requestedStateChange.Length > 0;
+        }
+        public string GetRequestedStateName()
+        {
+            return m_requestedStateChange;
+        }
+
+        public void RequestStateChange(string name)
+        {
+            m_requestedStateChange = name;
+            
+        }
         public bool IsInputEnabled(){ return m_inputEnabled; }
         public void EnableInput(){ m_inputEnabled = true; }
         public void DisableInput(){ m_inputEnabled = false; }

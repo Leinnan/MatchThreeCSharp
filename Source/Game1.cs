@@ -22,8 +22,8 @@ namespace MonoGameCore {
 
         protected override void Initialize () {
             m_stateHandler = new StateHandler();
-            GameState gameState = new GameState();
             m_stateHandler.RegisterState(new GameState());
+            m_stateHandler.RegisterState(new MenuState());
             base.Initialize ();
         }
 
@@ -31,6 +31,7 @@ namespace MonoGameCore {
             m_stateHandler.LoadAssets(Content, GraphicsDevice);
             spriteBatch = new SpriteBatch (GraphicsDevice);
             m_stateHandler.Start("GameState");
+            m_stateHandler.Start("MenuState");
         }
 
         protected override void Update (GameTime gameTime) {

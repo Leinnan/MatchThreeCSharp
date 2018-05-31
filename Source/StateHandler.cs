@@ -31,6 +31,10 @@ namespace MonoGameCore {
 
             if(m_states.Find(x => x.Id.Equals(m_curState)).IsRequestingGameExit())
                 m_exitGameRequest = true;
+            else if (m_states.Find(x => x.Id.Equals(m_curState)).IsRequestingStateChange())
+            {
+                SwitchState(m_states.Find(x => x.Id.Equals(m_curState)).GetRequestedStateName());
+            }
         }
         public void RegisterState(State newState)
         {

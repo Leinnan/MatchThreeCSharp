@@ -106,7 +106,7 @@ namespace MonoGameCore {
         {            
             switch (pressedKey) {
                 case Keys.Escape:
-                    RequestGameExit();
+                    RequestStateChange("MenuState");
                     break;
                 default:
                     break;
