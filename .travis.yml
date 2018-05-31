@@ -3,3 +3,5 @@ mono: none
 dotnet: 2.1.4
 script:
  - dotnet restore
+ - dotnet build
+ - dotnet publish -c Release -r win10-x86
