@@ -1,5 +1,9 @@
 language: csharp
 dotnet: 2.1.4
+before_install:
+ - wget https://raw.githubusercontent.com/hotice/webupd8/master/install-google-fonts
+ - chmod +x install-google-fonts
+ - ./install-google-fonts
 script:
  - dotnet restore
  - dotnet build
