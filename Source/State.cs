@@ -77,6 +77,7 @@ namespace MonoGameCore {
                 OnMouseReleased (currState.Position.ToVector2 (), movement);
             } else if (currState.LeftButton == ButtonState.Pressed) {
                 OnMousePressed (currState.Position.ToVector2 ());
+                m_pressedMousePos = currState.Position.ToVector2 ();
             }
             m_prevMouseState = Mouse.GetState ();
         }

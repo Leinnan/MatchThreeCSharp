@@ -28,6 +28,7 @@ namespace MonoGameCore {
         SoundEffect m_matchingEffect;
         float m_delay = 0.0f; 
         (Vector2 one, Vector2 two) m_swappedSymbols;
+        Vector2 m_selectedSymbol;
         
         public GameState(){}
 
@@ -114,29 +115,57 @@ namespace MonoGameCore {
 
         public override void OnMouseReleased (Vector2 mousePos, Vector2 movement) 
         {
-            for(int i = 0; i < Constants.BOARD_SIZE; i++)
+            Console.WriteLine("[MOVEMENT] " + movement.X + " " + movement.Y );
+
+            if(m_currentSubstate != Substate.IDLE)
+                return;
+
+            var inputStartedSymbolIndex = m_board.GetSymbolIndexAtGfxPos(mousePos-movement);
+            var inputEndedSymbolIndex = m_board.GetSymbolIndexAtGfxPos(mousePos);
+            if(inputEndedSymbolIndex.X != -1)
             {
-                for(int j = 0; j < Constants.BOARD_SIZE; j++)
+                if(m_board.IsAnySymbolSelected())
                 {
-                    if(m_board.GetSymbolAtIndex(i,j).IsTouched(mousePos) && m_currentSubstate == Substate.IDLE)
+                    var selectedSymbolPos = m_board.GetSelectedSymbolPos();
+                    bool canSwap = m_board.CanSwapWithSelectedSymbol(inputEndedSymbolIndex);
+                    m_board.StopSymbolSelection();
+                    if(canSwap)
                     {
-                        if(m_board.IsAnySymbolSelected())
+                        m_swappedSymbols = (selectedSymbolPos, inputEndedSymbolIndex);
+                        m_board.SwapSymbols(selectedSymbolPos, inputEndedSymbolIndex);
+                        m_swipeEffect.Play();
+                        SwitchState(Substate.SWAPING);
+                    }
+                }
+                else
+                {
+                    bool isGestureCorrect = false;
+                    Vector2 symbolToSwap = inputStartedSymbolIndex;
+
+                    if(movement.X >= ( Constants.SYMBOL_GFX_SIZE * 0.6f) ||
+                        movement.Y >= ( Constants.SYMBOL_GFX_SIZE * 0.6f))
+                    {
+                        if( Math.Abs(movement.X) > Math.Abs(movement.Y) )
                         {
-                            var selectedSymbolPos = m_board.GetSelectedSymbolPos();
-                            bool canSwap = m_board.CanSwapWithSelectedSymbol(new Vector2(i,j));
-                            m_board.StopSymbolSelection();
-                            if(canSwap)
-                            {
-                                m_swappedSymbols = (selectedSymbolPos, new Vector2(i,j));
-                                m_board.SwapSymbols(selectedSymbolPos, new Vector2(i,j));
-                                m_swipeEffect.Play();
-                                SwitchState(Substate.SWAPING);
-                            }
+                            symbolToSwap.X += movement.X > 0 ? 1 : -1;
                         }
                         else
-                            m_board.SelectSymbolAtIndex(i,j);
-                        Console.WriteLine("Symbol o nr [" + i.ToString() + "," + j.ToString() + "]\n\n");
+                        {
+                            symbolToSwap.Y += movement.Y > 0 ? 1 : -1;
+                        }
+                        isGestureCorrect = (symbolToSwap.X >= 0 && symbolToSwap.X < Constants.BOARD_SIZE &&
+                                            symbolToSwap.Y >= 0 && symbolToSwap.Y < Constants.BOARD_SIZE );
                     }
+                    
+                    if(isGestureCorrect)
+                    {
+                        m_swappedSymbols = (symbolToSwap, inputStartedSymbolIndex);
+                        m_board.SwapSymbols(symbolToSwap, inputStartedSymbolIndex);
+                        m_swipeEffect.Play();
+                        SwitchState(Substate.SWAPING);
+                    }
+                    else
+                        m_board.SelectSymbolAtIndex((int)inputEndedSymbolIndex.X, (int)inputEndedSymbolIndex.Y);
                 }
             }
         }

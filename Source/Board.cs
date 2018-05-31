@@ -166,6 +166,26 @@ namespace MonoGameCore
                         m_matchingSymbolsAmount++;
                     }
             }
+            for(int i=1;i<Constants.BOARD_SIZE-1;i++)
+            {
+                // X axis
+                if (m_symbols[i,0].symbolType==m_symbols[i+1,0].symbolType &&
+                    m_symbols[i,0].symbolType==m_symbols[i-1,0].symbolType)
+                    for(int n=-1;n<=1;n++)
+                    {
+                        m_symbols[i+n,0].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+
+                // Y axis
+                if (m_symbols[0,i].symbolType==m_symbols[0,i+1].symbolType &&
+                    m_symbols[0,i].symbolType==m_symbols[0,i-1].symbolType)
+                    for(int n=-1;n<=1;n++) 
+                    {
+                        m_symbols[0,i+n].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+            }
 
         }
         //! returns true if destroy any symbol
@@ -211,6 +231,18 @@ namespace MonoGameCore
             return false;
         }
 
+        public Vector2 GetSymbolIndexAtGfxPos(Vector2 pos)
+        {
+            for(int i = 0; i < Constants.BOARD_SIZE; i++)
+                for(int j = 0; j < Constants.BOARD_SIZE; j++)
+                    if( m_symbols[i, j].IsTouched(pos))
+                    {
+                        return new Vector2(i, j);
+                    }
+
+            return new Vector2(-1,-1);
+
+        }
 
     }
 }
