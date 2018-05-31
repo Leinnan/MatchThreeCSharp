@@ -230,3 +230,15 @@
 /processorParam:Quality=Best
 /build:sfx/swipeEffect.ogg
 
+#begin sfx/matchingEffect.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/matchingEffect.ogg
+
+#begin sfx/swipeBackEffect.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sfx/swipeBackEffect.ogg
+

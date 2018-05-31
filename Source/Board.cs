@@ -18,6 +18,7 @@ namespace MonoGameCore
             public int symbolType;
             Vector2 pos;
             bool highlighted;
+            public bool matching;
             public void SetPos(int x, int y)
             {
                 pos = new Vector2(x,y);
@@ -49,9 +50,10 @@ namespace MonoGameCore
 
         Random rnd = new Random();
         FilledRectangle m_background;
-        SymbolType[] m_symbolsTypes = new SymbolType[8]; 
+        SymbolType[] m_symbolsTypes = new SymbolType[Constants.SYMBOLS_TYPES_AMOUNT]; 
         Symbol[,] m_symbols = new Symbol[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
         (bool isAny, Vector2 pos) m_selectedSymbol = (false, new Vector2(-1,-1));
+        int m_matchingSymbolsAmount = 0;
 
         public Board(ContentManager content, GraphicsDevice graphics)
         {
@@ -88,6 +90,7 @@ namespace MonoGameCore
                     m_symbols[i, j].SetPos(i,j);
                 }
             }
+            
         }
 
         public void SelectSymbolAtIndex(int x, int y)
@@ -127,6 +130,84 @@ namespace MonoGameCore
             }
         }
 
+        public void DestroySymbol(int x, int y)
+        {
+            for(int i = y; i >= 1; i--)
+            {
+                SwapSymbols( new Vector2(x,i), new Vector2(x,i-1) );
+            }
+            m_symbols[x, 0].symbolType = rnd.Next(0,Constants.SYMBOLS_TYPES_AMOUNT);
+        }
+
+        public int GetMatchingSymbolsAmount(){ return m_matchingSymbolsAmount; }
+
+        public void CalculateMatchingSymbols()
+        {
+            m_matchingSymbolsAmount = 0;
+
+            for(int i=1;i<Constants.BOARD_SIZE-1;i++)
+            for(int j=1;j<Constants.BOARD_SIZE-1;j++)
+            {
+                // X axis
+                if (m_symbols[i,j].symbolType==m_symbols[i+1,j].symbolType &&
+                    m_symbols[i,j].symbolType==m_symbols[i-1,j].symbolType)
+                    for(int n=-1;n<=1;n++)
+                    {
+                        m_symbols[i+n,j].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+
+                // Y axis
+                if (m_symbols[i,j].symbolType==m_symbols[i,j+1].symbolType &&
+                    m_symbols[i,j].symbolType==m_symbols[i,j-1].symbolType)
+                    for(int n=-1;n<=1;n++) 
+                    {
+                        m_symbols[i,j+n].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+            }
+            for(int i=1;i<Constants.BOARD_SIZE-1;i++)
+            {
+                // X axis
+                if (m_symbols[i,0].symbolType==m_symbols[i+1,0].symbolType &&
+                    m_symbols[i,0].symbolType==m_symbols[i-1,0].symbolType)
+                    for(int n=-1;n<=1;n++)
+                    {
+                        m_symbols[i+n,0].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+
+                // Y axis
+                if (m_symbols[0,i].symbolType==m_symbols[0,i+1].symbolType &&
+                    m_symbols[0,i].symbolType==m_symbols[0,i-1].symbolType)
+                    for(int n=-1;n<=1;n++) 
+                    {
+                        m_symbols[0,i+n].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+            }
+
+        }
+        //! returns true if destroy any symbol
+        public bool DestroyAllMatchingSymbols()
+        {
+            bool wasAnySymbolDestroyed = false;
+            for(int i=0;i<Constants.BOARD_SIZE;i++)
+            for(int j=0;j<Constants.BOARD_SIZE;j++)
+                if(m_symbols[i,j].matching)
+                {
+                    DestroySymbol(i,j);
+                    m_symbols[i,j].matching = false;
+                    wasAnySymbolDestroyed =true;
+                }
+            m_matchingSymbolsAmount = 0;
+
+            return wasAnySymbolDestroyed;
+        }
+
+        // TODO Edit after animation implementation
+        public bool AreAnyAnimationInProgress(){ return false; }
+
         public ref Symbol GetSymbolAtIndex(int x, int y){ return ref m_symbols[x, y]; }
 
         public void SwapSymbols(Vector2 first, Vector2 second)
@@ -136,6 +217,7 @@ namespace MonoGameCore
             m_symbols[(int)first.X,(int)first.Y].symbolType = m_symbols[(int)second.X,(int)second.Y].symbolType;
             m_symbols[(int)second.X,(int)second.Y].symbolType = symbolTypeTmp;
         }
+
         public bool CanSwapWithSelectedSymbol(Vector2 pos)
         {
             if(pos.X == m_selectedSymbol.pos.X)
@@ -149,6 +231,18 @@ namespace MonoGameCore
             return false;
         }
 
+        public Vector2 GetSymbolIndexAtGfxPos(Vector2 pos)
+        {
+            for(int i = 0; i < Constants.BOARD_SIZE; i++)
+                for(int j = 0; j < Constants.BOARD_SIZE; j++)
+                    if( m_symbols[i, j].IsTouched(pos))
+                    {
+                        return new Vector2(i, j);
+                    }
+
+            return new Vector2(-1,-1);
+
+        }
 
     }
 }
