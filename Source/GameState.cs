@@ -24,6 +24,10 @@ namespace MonoGameCore {
         public int m_score;
         private Substate m_currentSubstate = Substate.IDLE;
         SoundEffect m_swipeEffect;
+        SoundEffect m_swipeBackEffect;
+        SoundEffect m_matchingEffect;
+        float m_delay = 0.0f; 
+        (Vector2 one, Vector2 two) m_swappedSymbols;
         
         public GameState(){}
 
@@ -39,18 +43,53 @@ namespace MonoGameCore {
         }
         public override void OnUpdate(GameTime gameTime)
         {
+            if(m_delay >= 0.0f)
+            {
+                m_delay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                return;
+            }
             //Console.WriteLine("OnUpdate"); 
             switch(m_currentSubstate)
             {
                 case Substate.IDLE:
                 {
-                    break;
                 }
+                break;
+                case Substate.SWAPING:
+                {
+                    m_board.CalculateMatchingSymbols();
+                    if(!m_board.AreAnyAnimationInProgress())
+                    {
+                        m_delay += 0.2f;
+                        SwitchState(m_board.GetMatchingSymbolsAmount() > 0 ? Substate.WINING : Substate.SWAPING_BACK);
+                    }
+                }
+                break;
+                case Substate.SWAPING_BACK:
+                {
+                    if(!m_board.AreAnyAnimationInProgress())
+                    {
+                        m_board.SwapSymbols(m_swappedSymbols.one, m_swappedSymbols.two);
+                        m_swipeBackEffect.Play();
+                        SwitchState(Substate.IDLE);
+                    }
+                }
+                break;
+                case Substate.WINING:
+                {
+                    m_score += m_board.GetMatchingSymbolsAmount() * 100;
+                    m_board.DestroyAllMatchingSymbols();
+                    m_matchingEffect.Play();
+                    if(!m_board.AreAnyAnimationInProgress())
+                        SwitchState(Substate.IDLE);
+                }
+                break;
                 default:
                 {
                     break;
                 }
             }
+
         }
         public override void OnEnter()
         {
@@ -79,7 +118,7 @@ namespace MonoGameCore {
             {
                 for(int j = 0; j < Constants.BOARD_SIZE; j++)
                 {
-                    if(m_board.GetSymbolAtIndex(i,j).IsTouched(mousePos))
+                    if(m_board.GetSymbolAtIndex(i,j).IsTouched(mousePos) && m_currentSubstate == Substate.IDLE)
                     {
                         if(m_board.IsAnySymbolSelected())
                         {
@@ -88,6 +127,7 @@ namespace MonoGameCore {
                             m_board.StopSymbolSelection();
                             if(canSwap)
                             {
+                                m_swappedSymbols = (selectedSymbolPos, new Vector2(i,j));
                                 m_board.SwapSymbols(selectedSymbolPos, new Vector2(i,j));
                                 m_swipeEffect.Play();
                                 SwitchState(Substate.SWAPING);
@@ -108,6 +148,8 @@ namespace MonoGameCore {
             background = content.Load<Texture2D>(Constants.INGAME_BG);
             m_board = new Board(content, graphics);
             m_swipeEffect = content.Load<SoundEffect>(Constants.SWIPE_SOUND);
+            m_swipeBackEffect = content.Load<SoundEffect>(Constants.SWIPE_BACK_SOUND);
+            m_matchingEffect = content.Load<SoundEffect>(Constants.MATCHING_SOUND);
         }
         public override void OnUnload(ContentManager content, GraphicsDevice graphics)
         {
