@@ -7,14 +7,13 @@ using System.Collections.Generic;
 namespace MonoGameCore {
     public abstract class State{
         public abstract string Id { get; }
-        List<Keys> m_holdedKeys = new List<Keys> ();
-        MouseState m_prevMouseState;
+        private List<Keys> m_holdedKeys = new List<Keys> ();
+        private MouseState m_prevMouseState;
         private bool m_exitGameRequest = false;
         private string m_requestedStateChange = "";
         private bool m_inputEnabled = true;
 
         Vector2 m_pressedMousePos;
-        Vector2 m_mousePos;
 
         public abstract void OnInit();
         public abstract void OnShutdown();
@@ -41,6 +40,11 @@ namespace MonoGameCore {
         }
         public bool IsRequestingGameExit(){ return m_exitGameRequest; }
         public void RequestGameExit(){ m_exitGameRequest = true; }
+
+        public void ResetRequestStateChange()
+        {
+            m_requestedStateChange = "";
+        }
 
         public bool IsRequestingStateChange()
         {

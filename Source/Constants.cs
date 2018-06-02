@@ -19,6 +19,7 @@ namespace MonoGameCore
         public const string SWIPE_BACK_SOUND = "sfx/swipeBackEffect";
         public const string MATCHING_SOUND = "sfx/matchingEffect";
         public const string INGAME_BG = "gfx/bg";
+        public const string MENU_LOGO = "gfx/logo";
         public static readonly string[] SYMBOLS_PATH = {
             "gfx/symbol_0",
             "gfx/symbol_1",

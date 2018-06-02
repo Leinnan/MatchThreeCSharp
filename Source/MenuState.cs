@@ -10,24 +10,12 @@ namespace MonoGameCore {
     public sealed class MenuState : State {
         public override string Id { get{return "MenuState";} }
 
-        public enum Substate {
-            IDLE,
-            SWAPING,
-            WINING,
-            SWAPING_BACK,
-            DROPPING
-        }
-
-        private SpriteFont font;
-        private Texture2D background;
-        private Substate m_currentSubstate = Substate.IDLE;
-        float m_delay = 0.0f; 
-        (Vector2 one, Vector2 two) m_swappedSymbols;
-        Vector2 m_selectedSymbol;
+        private SpriteFont _font;
+        private Texture2D _background;
+        private Texture2D _logo;
+        float _delay = 0.5f; 
         
         public MenuState(){}
-
-        public void SwitchState( Substate newSubstate ){ m_currentSubstate = newSubstate; }
 
         public override void OnInit()
         {
@@ -37,15 +25,18 @@ namespace MonoGameCore {
         }
         public override void OnUpdate(GameTime gameTime)
         {
-            if(m_delay >= 0.0f)
+            if(_delay >= 0.0f)
             {
-                m_delay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _delay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 return;
             }
-
+            if(_delay <= 0.0f)
+                EnableInput();
         }
         public override void OnEnter()
         {
+            _delay = 0.5f; 
+            DisableInput();
             Console.WriteLine("OnEnter"); 
         }
         public override void OnQuit()
@@ -72,8 +63,9 @@ namespace MonoGameCore {
         public override void OnLoad(ContentManager content, GraphicsDevice graphics)
         {
             Console.WriteLine("OnLoad"); 
-            font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
-            background = content.Load<Texture2D>(Constants.INGAME_BG);
+            _font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
+            _logo = content.Load<Texture2D>(Constants.MENU_LOGO);
+            _background = content.Load<Texture2D>(Constants.INGAME_BG);
         }
         public override void OnUnload(ContentManager content, GraphicsDevice graphics)
         {
@@ -82,8 +74,16 @@ namespace MonoGameCore {
         public override void OnDraw(ref SpriteBatch spriteBatch)
         {
             //Console.WriteLine("OnDraw"); 
-            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
-            spriteBatch.DrawString(font, "PRESS ANY KEY TO START GAME", new Vector2(30, 400), Color.Black);
-        }  
+            spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(_logo, GetCurrentLogoPos(), Color.White);
+            spriteBatch.DrawString(_font, "PRESS ANY KEY TO START GAME", new Vector2(30, 400), Color.Black);
+        }
+
+        private Vector2 GetCurrentLogoPos()
+        {
+            Vector2 result = new Vector2( 40, -100);
+            result.Y += 250.0f * (float)Math.Pow(1.0f - _delay,3);
+            return result;
+        }
     }
 }

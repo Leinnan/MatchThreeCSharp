@@ -52,6 +52,7 @@ namespace MonoGameCore {
         public void SwitchState( string newState )
         {
             m_states.Find(x => x.Id.Equals(m_curState)).OnQuit();
+            m_states.Find(x => x.Id.Equals(m_curState)).ResetRequestStateChange();
             m_states.Find(x => x.Id.Equals(newState)).OnEnter();
             m_curState = newState;
         }

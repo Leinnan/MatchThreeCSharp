@@ -18,21 +18,20 @@ namespace MonoGameCore {
             DROPPING
         }
 
-        private SpriteFont font;
-        private Texture2D background;
-        public Board m_board;
-        public int m_score;
-        private Substate m_currentSubstate = Substate.IDLE;
-        SoundEffect m_swipeEffect;
-        SoundEffect m_swipeBackEffect;
-        SoundEffect m_matchingEffect;
-        float m_delay = 0.0f; 
-        (Vector2 one, Vector2 two) m_swappedSymbols;
-        Vector2 m_selectedSymbol;
+        private SpriteFont _font;
+        private Texture2D _background;
+        private Board _board;
+        private int _score;
+        private Substate _currentSubstate = Substate.IDLE;
+        private SoundEffect _swipeEffect;
+        private SoundEffect _swipeBackEffect;
+        private SoundEffect _matchingEffect;
+        private float _delay = 0.0f; 
+        private (Vector2 one, Vector2 two) _swappedSymbols;
         
         public GameState(){}
 
-        public void SwitchState( Substate newSubstate ){ m_currentSubstate = newSubstate; }
+        public void SwitchState( Substate newSubstate ){ _currentSubstate = newSubstate; }
 
         public override void OnInit()
         {
@@ -44,13 +43,13 @@ namespace MonoGameCore {
         }
         public override void OnUpdate(GameTime gameTime)
         {
-            if(m_delay >= 0.0f)
+            if(_delay >= 0.0f)
             {
-                m_delay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _delay -= (float)gameTime.ElapsedGameTime.TotalSeconds;
                 return;
             }
             //Console.WriteLine("OnUpdate"); 
-            switch(m_currentSubstate)
+            switch(_currentSubstate)
             {
                 case Substate.IDLE:
                 {
@@ -58,30 +57,30 @@ namespace MonoGameCore {
                 break;
                 case Substate.SWAPING:
                 {
-                    m_board.CalculateMatchingSymbols();
-                    if(!m_board.AreAnyAnimationInProgress())
+                    _board.CalculateMatchingSymbols();
+                    if(!_board.AreAnyAnimationInProgress())
                     {
-                        m_delay += 0.2f;
-                        SwitchState(m_board.GetMatchingSymbolsAmount() > 0 ? Substate.WINING : Substate.SWAPING_BACK);
+                        _delay += 0.2f;
+                        SwitchState(_board.GetMatchingSymbolsAmount() > 0 ? Substate.WINING : Substate.SWAPING_BACK);
                     }
                 }
                 break;
                 case Substate.SWAPING_BACK:
                 {
-                    if(!m_board.AreAnyAnimationInProgress())
+                    if(!_board.AreAnyAnimationInProgress())
                     {
-                        m_board.SwapSymbols(m_swappedSymbols.one, m_swappedSymbols.two);
-                        m_swipeBackEffect.Play();
+                        _board.SwapSymbols(_swappedSymbols.one, _swappedSymbols.two);
+                        _swipeBackEffect.Play();
                         SwitchState(Substate.IDLE);
                     }
                 }
                 break;
                 case Substate.WINING:
                 {
-                    m_score += m_board.GetMatchingSymbolsAmount() * 100;
-                    m_board.DestroyAllMatchingSymbols();
-                    m_matchingEffect.Play();
-                    if(!m_board.AreAnyAnimationInProgress())
+                    _score += _board.GetMatchingSymbolsAmount() * 100;
+                    _board.DestroyAllMatchingSymbols();
+                    _matchingEffect.Play();
+                    if(!_board.AreAnyAnimationInProgress())
                         SwitchState(Substate.IDLE);
                 }
                 break;
@@ -94,7 +93,9 @@ namespace MonoGameCore {
         }
         public override void OnEnter()
         {
+            _delay = 0.5f;
             Console.WriteLine("OnEnter"); 
+
         }
         public override void OnQuit()
         {
@@ -117,23 +118,23 @@ namespace MonoGameCore {
         {
             Console.WriteLine("[MOVEMENT] " + movement.X + " " + movement.Y );
 
-            if(m_currentSubstate != Substate.IDLE)
+            if(_currentSubstate != Substate.IDLE)
                 return;
 
-            var inputStartedSymbolIndex = m_board.GetSymbolIndexAtGfxPos(mousePos-movement);
-            var inputEndedSymbolIndex = m_board.GetSymbolIndexAtGfxPos(mousePos);
+            var inputStartedSymbolIndex = _board.GetSymbolIndexAtGfxPos(mousePos-movement);
+            var inputEndedSymbolIndex = _board.GetSymbolIndexAtGfxPos(mousePos);
             if(inputEndedSymbolIndex.X != -1)
             {
-                if(m_board.IsAnySymbolSelected())
+                if(_board.IsAnySymbolSelected())
                 {
-                    var selectedSymbolPos = m_board.GetSelectedSymbolPos();
-                    bool canSwap = m_board.CanSwapWithSelectedSymbol(inputEndedSymbolIndex);
-                    m_board.StopSymbolSelection();
+                    var selectedSymbolPos = _board.GetSelectedSymbolPos();
+                    bool canSwap = _board.CanSwapWithSelectedSymbol(inputEndedSymbolIndex);
+                    _board.StopSymbolSelection();
                     if(canSwap)
                     {
-                        m_swappedSymbols = (selectedSymbolPos, inputEndedSymbolIndex);
-                        m_board.SwapSymbols(selectedSymbolPos, inputEndedSymbolIndex);
-                        m_swipeEffect.Play();
+                        _swappedSymbols = (selectedSymbolPos, inputEndedSymbolIndex);
+                        _board.SwapSymbols(selectedSymbolPos, inputEndedSymbolIndex);
+                        _swipeEffect.Play();
                         SwitchState(Substate.SWAPING);
                     }
                 }
@@ -159,13 +160,13 @@ namespace MonoGameCore {
                     
                     if(isGestureCorrect)
                     {
-                        m_swappedSymbols = (symbolToSwap, inputStartedSymbolIndex);
-                        m_board.SwapSymbols(symbolToSwap, inputStartedSymbolIndex);
-                        m_swipeEffect.Play();
+                        _swappedSymbols = (symbolToSwap, inputStartedSymbolIndex);
+                        _board.SwapSymbols(symbolToSwap, inputStartedSymbolIndex);
+                        _swipeEffect.Play();
                         SwitchState(Substate.SWAPING);
                     }
                     else
-                        m_board.SelectSymbolAtIndex((int)inputEndedSymbolIndex.X, (int)inputEndedSymbolIndex.Y);
+                        _board.SelectSymbolAtIndex((int)inputEndedSymbolIndex.X, (int)inputEndedSymbolIndex.Y);
                 }
             }
         }
@@ -173,12 +174,12 @@ namespace MonoGameCore {
         public override void OnLoad(ContentManager content, GraphicsDevice graphics)
         {
             Console.WriteLine("OnLoad"); 
-            font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
-            background = content.Load<Texture2D>(Constants.INGAME_BG);
-            m_board = new Board(content, graphics);
-            m_swipeEffect = content.Load<SoundEffect>(Constants.SWIPE_SOUND);
-            m_swipeBackEffect = content.Load<SoundEffect>(Constants.SWIPE_BACK_SOUND);
-            m_matchingEffect = content.Load<SoundEffect>(Constants.MATCHING_SOUND);
+            _font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
+            _background = content.Load<Texture2D>(Constants.INGAME_BG);
+            _board = new Board(content, graphics);
+            _swipeEffect = content.Load<SoundEffect>(Constants.SWIPE_SOUND);
+            _swipeBackEffect = content.Load<SoundEffect>(Constants.SWIPE_BACK_SOUND);
+            _matchingEffect = content.Load<SoundEffect>(Constants.MATCHING_SOUND);
         }
         public override void OnUnload(ContentManager content, GraphicsDevice graphics)
         {
@@ -187,9 +188,9 @@ namespace MonoGameCore {
         public override void OnDraw(ref SpriteBatch spriteBatch)
         {
             //Console.WriteLine("OnDraw"); 
-            spriteBatch.Draw(background, new Vector2(0, 0), Color.White);
-            m_board.Draw(ref spriteBatch);
-            spriteBatch.DrawString(font, "Score: " + m_score.ToString(), new Vector2(10, 10), Color.Black);
+            spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
+            _board.Draw(ref spriteBatch);
+            spriteBatch.DrawString(_font, "Score: " + _score.ToString(), new Vector2(10, 10), Color.Black);
         }  
     }
 }
