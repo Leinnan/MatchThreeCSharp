@@ -2,25 +2,25 @@ namespace MonoGameCore
 {
     public static class Constants
     {
-        public const string GAME_NAME = "MatchThree";
+        public const string GameName = "MatchThree";
 
-        public const int SCREEN_WIDTH = 480;
-        public const int SCREEN_HEIGHT = 800;
+        public const int ScreenWidth = 480;
+        public const int ScreenHeight = 800;
 
-        public const int SYMBOLS_TYPES_AMOUNT = 10;
-        public const int SYMBOL_GFX_SIZE = 32;
+        public const int SymbolsTypesAmount = 10;
+        public const int SymbolGfxSize = 32;
 
-        public const int BOARD_SIZE = 12;
-        public const int BOARD_LENGTH = 394;
-        public const int BOARD_POS_X = (SCREEN_WIDTH - BOARD_LENGTH) / 2;
-        public const int BOARD_POS_Y = 50;
+        public const int BoardSize = 12;
+        public const int BoardLength = 394;
+        public const int BoardPosX = (ScreenWidth - BoardLength) / 2;
+        public const int BoardPosY = 50;
 
-        public const string SWIPE_SOUND = "sfx/swipeEffect";
-        public const string SWIPE_BACK_SOUND = "sfx/swipeBackEffect";
-        public const string MATCHING_SOUND = "sfx/matchingEffect";
-        public const string INGAME_BG = "gfx/bg";
-        public const string MENU_LOGO = "gfx/logo";
-        public static readonly string[] SYMBOLS_PATH = {
+        public const string SwipeSound = "sfx/swipeEffect";
+        public const string SwipeBackSound = "sfx/swipeBackEffect";
+        public const string MatchingSound = "sfx/matchingEffect";
+        public const string IngameBg = "gfx/bg";
+        public const string MenuLogo = "gfx/logo";
+        public static readonly string[] SymbolsPath = {
             "gfx/symbol_0",
             "gfx/symbol_1",
             "gfx/symbol_2",

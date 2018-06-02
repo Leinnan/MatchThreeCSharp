@@ -64,8 +64,8 @@ namespace MonoGameCore {
         {
             Console.WriteLine("OnLoad"); 
             _font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
-            _logo = content.Load<Texture2D>(Constants.MENU_LOGO);
-            _background = content.Load<Texture2D>(Constants.INGAME_BG);
+            _logo = content.Load<Texture2D>(Constants.MenuLogo);
+            _background = content.Load<Texture2D>(Constants.IngameBg);
         }
         public override void OnUnload(ContentManager content, GraphicsDevice graphics)
         {

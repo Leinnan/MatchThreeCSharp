@@ -15,8 +15,8 @@ namespace MonoGameCore {
             graphics = new GraphicsDeviceManager (this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            graphics.PreferredBackBufferWidth = Constants.SCREEN_WIDTH;  // set this value to the desired width of your window
-            graphics.PreferredBackBufferHeight = Constants.SCREEN_HEIGHT;   // set this value to the desired height of your window
+            graphics.PreferredBackBufferWidth = Constants.ScreenWidth;  // set this value to the desired width of your window
+            graphics.PreferredBackBufferHeight = Constants.ScreenHeight;   // set this value to the desired height of your window
             graphics.ApplyChanges();
         }
 

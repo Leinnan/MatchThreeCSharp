@@ -5,29 +5,29 @@ namespace MonoGameCore
 {
     public class FilledRectangle
     {
-        Rectangle m_rect;
-        Color[] m_data;
-        Texture2D m_txt;
+        Rectangle _rect;
+        Color[] _data;
+        Texture2D _txt;
         public FilledRectangle(Vector2 pos, Vector2 size, Color color)
         {
-            m_rect = new Rectangle((int)pos.X, (int)pos.Y, (int)size.X, (int)size.Y);
-            m_data = new Color[]{color};
+            _rect = new Rectangle((int)pos.X, (int)pos.Y, (int)size.X, (int)size.Y);
+            _data = new Color[]{color};
         }
         public void GenerateTexture(GraphicsDevice graphics)
         {
-            m_txt = new Texture2D(graphics, 1, 1);
-            m_txt.SetData(m_data);
+            _txt = new Texture2D(graphics, 1, 1);
+            _txt.SetData(_data);
         }
 
         public void Move(Vector2 movement)
         {
-            m_rect.X += (int)movement.X;
-            m_rect.Y += (int)movement.Y;
+            _rect.X += (int)movement.X;
+            _rect.Y += (int)movement.Y;
         }
 
         public void Draw(ref SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(m_txt,m_rect,Color.White);
+            spriteBatch.Draw(_txt,_rect,Color.White);
         }
     }
 }

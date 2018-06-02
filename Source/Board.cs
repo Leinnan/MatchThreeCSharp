@@ -28,12 +28,12 @@ namespace MonoGameCore
                 pos = newPos;
             }
             public Vector2 GetPos(){ return pos; }
-            public Vector2 GetGfxPos(){ return ( new Vector2(Constants.BOARD_POS_X,50)+pos*Constants.SYMBOL_GFX_SIZE); }
+            public Vector2 GetGfxPos(){ return ( new Vector2(Constants.BoardPosX,50)+pos*Constants.SymbolGfxSize); }
             public Texture2D GetGfx(SymbolType[] symbolsTypes){ return symbolsTypes[symbolType].texture; }
             public bool IsTouched(Vector2 touchPos)
             {
                 Vector2 gfxMinPos = GetGfxPos();
-                Vector2 gfxMaxPos = gfxMinPos + new Vector2(Constants.SYMBOL_GFX_SIZE,Constants.SYMBOL_GFX_SIZE);
+                Vector2 gfxMaxPos = gfxMinPos + new Vector2(Constants.SymbolGfxSize,Constants.SymbolGfxSize);
                 
                 return (touchPos.X >= gfxMinPos.X && touchPos.Y >= gfxMinPos.Y &&
                         touchPos.X <= gfxMaxPos.X && touchPos.Y <= gfxMaxPos.Y );
@@ -50,21 +50,21 @@ namespace MonoGameCore
 
         Random rnd = new Random();
         FilledRectangle m_background;
-        SymbolType[] m_symbolsTypes = new SymbolType[Constants.SYMBOLS_TYPES_AMOUNT]; 
-        Symbol[,] m_symbols = new Symbol[Constants.BOARD_SIZE, Constants.BOARD_SIZE];
+        SymbolType[] m_symbolsTypes = new SymbolType[Constants.SymbolsTypesAmount]; 
+        Symbol[,] m_symbols = new Symbol[Constants.BoardSize, Constants.BoardSize];
         (bool isAny, Vector2 pos) m_selectedSymbol = (false, new Vector2(-1,-1));
         int m_matchingSymbolsAmount = 0;
 
         public Board(ContentManager content, GraphicsDevice graphics)
         {
             ReadSymbolsConfig();
-            for(int i = 0; i < Constants.SYMBOLS_TYPES_AMOUNT; i++)
+            for(int i = 0; i < Constants.SymbolsTypesAmount; i++)
             {
-                m_symbolsTypes[i].texture = content.Load<Texture2D>(Constants.SYMBOLS_PATH[i]);
+                m_symbolsTypes[i].texture = content.Load<Texture2D>(Constants.SymbolsPath[i]);
             }
             m_background = new FilledRectangle(
-                new Vector2(Constants.BOARD_POS_X, Constants.BOARD_POS_Y), // position
-                new Vector2(Constants.BOARD_LENGTH,Constants.BOARD_LENGTH), // size
+                new Vector2(Constants.BoardPosX, Constants.BoardPosY), // position
+                new Vector2(Constants.BoardLength,Constants.BoardLength), // size
                 new Color(0,0,0,200));
             m_background.GenerateTexture(graphics);
             GenerateSymbolsTable();
@@ -73,20 +73,20 @@ namespace MonoGameCore
         // for now preconfigured, maybe in future I will move this config to file
         void ReadSymbolsConfig()
         {
-            for(int i = 0; i < Constants.SYMBOLS_TYPES_AMOUNT; i++)
+            for(int i = 0; i < Constants.SymbolsTypesAmount; i++)
             {
                 m_symbolsTypes[i].id = i;
-                m_symbolsTypes[i].gfxPath = Constants.SYMBOLS_PATH[i];
+                m_symbolsTypes[i].gfxPath = Constants.SymbolsPath[i];
             }
         }
 
         void GenerateSymbolsTable()
         {
-            for(int i = 0; i < Constants.BOARD_SIZE; i++)
+            for(int i = 0; i < Constants.BoardSize; i++)
             {
-                for(int j = 0; j < Constants.BOARD_SIZE; j++)
+                for(int j = 0; j < Constants.BoardSize; j++)
                 {
-                    m_symbols[i, j].symbolType = rnd.Next(0,Constants.SYMBOLS_TYPES_AMOUNT);
+                    m_symbols[i, j].symbolType = rnd.Next(0,Constants.SymbolsTypesAmount);
                     m_symbols[i, j].SetPos(i,j);
                 }
             }
@@ -119,9 +119,9 @@ namespace MonoGameCore
         public void Draw(ref SpriteBatch spriteBatch)
         {
             m_background.Draw(ref spriteBatch);
-            for(int i = 0; i < Constants.BOARD_SIZE; i++)
+            for(int i = 0; i < Constants.BoardSize; i++)
             {
-                for(int j = 0; j < Constants.BOARD_SIZE; j++)
+                for(int j = 0; j < Constants.BoardSize; j++)
                 {
                     spriteBatch.Draw(m_symbols[i,j].GetGfx(m_symbolsTypes), 
                                      m_symbols[i,j].GetGfxPos(), 
@@ -136,7 +136,7 @@ namespace MonoGameCore
             {
                 SwapSymbols( new Vector2(x,i), new Vector2(x,i-1) );
             }
-            m_symbols[x, 0].symbolType = rnd.Next(0,Constants.SYMBOLS_TYPES_AMOUNT);
+            m_symbols[x, 0].symbolType = rnd.Next(0,Constants.SymbolsTypesAmount);
         }
 
         public int GetMatchingSymbolsAmount(){ return m_matchingSymbolsAmount; }
@@ -145,8 +145,8 @@ namespace MonoGameCore
         {
             m_matchingSymbolsAmount = 0;
 
-            for(int i=1;i<Constants.BOARD_SIZE-1;i++)
-            for(int j=1;j<Constants.BOARD_SIZE-1;j++)
+            for(int i=1;i<Constants.BoardSize-1;i++)
+            for(int j=1;j<Constants.BoardSize-1;j++)
             {
                 // X axis
                 if (m_symbols[i,j].symbolType==m_symbols[i+1,j].symbolType &&
@@ -166,7 +166,7 @@ namespace MonoGameCore
                         m_matchingSymbolsAmount++;
                     }
             }
-            for(int i=1;i<Constants.BOARD_SIZE-1;i++)
+            for(int i=1;i<Constants.BoardSize-1;i++)
             {
                 // X axis
                 if (m_symbols[i,0].symbolType==m_symbols[i+1,0].symbolType &&
@@ -192,8 +192,8 @@ namespace MonoGameCore
         public bool DestroyAllMatchingSymbols()
         {
             bool wasAnySymbolDestroyed = false;
-            for(int i=0;i<Constants.BOARD_SIZE;i++)
-            for(int j=0;j<Constants.BOARD_SIZE;j++)
+            for(int i=0;i<Constants.BoardSize;i++)
+            for(int j=0;j<Constants.BoardSize;j++)
                 if(m_symbols[i,j].matching)
                 {
                     DestroySymbol(i,j);
@@ -233,8 +233,8 @@ namespace MonoGameCore
 
         public Vector2 GetSymbolIndexAtGfxPos(Vector2 pos)
         {
-            for(int i = 0; i < Constants.BOARD_SIZE; i++)
-                for(int j = 0; j < Constants.BOARD_SIZE; j++)
+            for(int i = 0; i < Constants.BoardSize; i++)
+                for(int j = 0; j < Constants.BoardSize; j++)
                     if( m_symbols[i, j].IsTouched(pos))
                     {
                         return new Vector2(i, j);

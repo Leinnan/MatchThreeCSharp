@@ -11,18 +11,18 @@ namespace MonoGameCore {
         public override string Id { get{return "GameState";} }
 
         public enum Substate {
-            IDLE,
-            SWAPING,
-            WINING,
-            SWAPING_BACK,
-            DROPPING
+            Idle,
+            Swaping,
+            Wining,
+            SwapingBack,
+            Dropping
         }
 
         private SpriteFont _font;
         private Texture2D _background;
         private Board _board;
         private int _score;
-        private Substate _currentSubstate = Substate.IDLE;
+        private Substate _currentSubstate = Substate.Idle;
         private SoundEffect _swipeEffect;
         private SoundEffect _swipeBackEffect;
         private SoundEffect _matchingEffect;
@@ -51,37 +51,37 @@ namespace MonoGameCore {
             //Console.WriteLine("OnUpdate"); 
             switch(_currentSubstate)
             {
-                case Substate.IDLE:
+                case Substate.Idle:
                 {
                 }
                 break;
-                case Substate.SWAPING:
+                case Substate.Swaping:
                 {
                     _board.CalculateMatchingSymbols();
                     if(!_board.AreAnyAnimationInProgress())
                     {
                         _delay += 0.2f;
-                        SwitchState(_board.GetMatchingSymbolsAmount() > 0 ? Substate.WINING : Substate.SWAPING_BACK);
+                        SwitchState(_board.GetMatchingSymbolsAmount() > 0 ? Substate.Wining : Substate.SwapingBack);
                     }
                 }
                 break;
-                case Substate.SWAPING_BACK:
+                case Substate.SwapingBack:
                 {
                     if(!_board.AreAnyAnimationInProgress())
                     {
                         _board.SwapSymbols(_swappedSymbols.one, _swappedSymbols.two);
                         _swipeBackEffect.Play();
-                        SwitchState(Substate.IDLE);
+                        SwitchState(Substate.Idle);
                     }
                 }
                 break;
-                case Substate.WINING:
+                case Substate.Wining:
                 {
                     _score += _board.GetMatchingSymbolsAmount() * 100;
                     _board.DestroyAllMatchingSymbols();
                     _matchingEffect.Play();
                     if(!_board.AreAnyAnimationInProgress())
-                        SwitchState(Substate.IDLE);
+                        SwitchState(Substate.Idle);
                 }
                 break;
                 default:
@@ -118,7 +118,7 @@ namespace MonoGameCore {
         {
             Console.WriteLine("[MOVEMENT] " + movement.X + " " + movement.Y );
 
-            if(_currentSubstate != Substate.IDLE)
+            if(_currentSubstate != Substate.Idle)
                 return;
 
             var inputStartedSymbolIndex = _board.GetSymbolIndexAtGfxPos(mousePos-movement);
@@ -135,7 +135,7 @@ namespace MonoGameCore {
                         _swappedSymbols = (selectedSymbolPos, inputEndedSymbolIndex);
                         _board.SwapSymbols(selectedSymbolPos, inputEndedSymbolIndex);
                         _swipeEffect.Play();
-                        SwitchState(Substate.SWAPING);
+                        SwitchState(Substate.Swaping);
                     }
                 }
                 else
@@ -143,8 +143,8 @@ namespace MonoGameCore {
                     bool isGestureCorrect = false;
                     Vector2 symbolToSwap = inputStartedSymbolIndex;
 
-                    if(movement.X >= ( Constants.SYMBOL_GFX_SIZE * 0.6f) ||
-                        movement.Y >= ( Constants.SYMBOL_GFX_SIZE * 0.6f))
+                    if(movement.X >= ( Constants.SymbolGfxSize * 0.6f) ||
+                        movement.Y >= ( Constants.SymbolGfxSize * 0.6f))
                     {
                         if( Math.Abs(movement.X) > Math.Abs(movement.Y) )
                         {
@@ -154,8 +154,8 @@ namespace MonoGameCore {
                         {
                             symbolToSwap.Y += movement.Y > 0 ? 1 : -1;
                         }
-                        isGestureCorrect = (symbolToSwap.X >= 0 && symbolToSwap.X < Constants.BOARD_SIZE &&
-                                            symbolToSwap.Y >= 0 && symbolToSwap.Y < Constants.BOARD_SIZE );
+                        isGestureCorrect = (symbolToSwap.X >= 0 && symbolToSwap.X < Constants.BoardSize &&
+                                            symbolToSwap.Y >= 0 && symbolToSwap.Y < Constants.BoardSize );
                     }
                     
                     if(isGestureCorrect)
@@ -163,7 +163,7 @@ namespace MonoGameCore {
                         _swappedSymbols = (symbolToSwap, inputStartedSymbolIndex);
                         _board.SwapSymbols(symbolToSwap, inputStartedSymbolIndex);
                         _swipeEffect.Play();
-                        SwitchState(Substate.SWAPING);
+                        SwitchState(Substate.Swaping);
                     }
                     else
                         _board.SelectSymbolAtIndex((int)inputEndedSymbolIndex.X, (int)inputEndedSymbolIndex.Y);
@@ -175,11 +175,11 @@ namespace MonoGameCore {
         {
             Console.WriteLine("OnLoad"); 
             _font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
-            _background = content.Load<Texture2D>(Constants.INGAME_BG);
+            _background = content.Load<Texture2D>(Constants.IngameBg);
             _board = new Board(content, graphics);
-            _swipeEffect = content.Load<SoundEffect>(Constants.SWIPE_SOUND);
-            _swipeBackEffect = content.Load<SoundEffect>(Constants.SWIPE_BACK_SOUND);
-            _matchingEffect = content.Load<SoundEffect>(Constants.MATCHING_SOUND);
+            _swipeEffect = content.Load<SoundEffect>(Constants.SwipeSound);
+            _swipeBackEffect = content.Load<SoundEffect>(Constants.SwipeBackSound);
+            _matchingEffect = content.Load<SoundEffect>(Constants.MatchingSound);
         }
         public override void OnUnload(ContentManager content, GraphicsDevice graphics)
         {

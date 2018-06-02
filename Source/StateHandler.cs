@@ -7,16 +7,16 @@ using System.Diagnostics;
 
 namespace MonoGameCore {
     public class StateHandler{
-        protected string m_curState;
-        List<State> m_states = new List<State>();
-        private bool m_exitGameRequest = false;
+        protected string _curState;
+        List<State> _states = new List<State>();
+        private bool _exitGameRequest = false;
 
         public StateHandler(){}
 
         ~StateHandler()
         {
-            m_states.Find(x => x.Id.Equals(m_curState)).OnQuit();
-            foreach (var state in m_states)
+            _states.Find(x => x.Id.Equals(_curState)).OnQuit();
+            foreach (var state in _states)
             {
                 state.OnShutdown();
             }
@@ -26,54 +26,54 @@ namespace MonoGameCore {
         {
             // const bool contains = m_states.Contains(x => x.Id.Equals(m_curState));
             // Debug.Assert(contains, "There is no state with ID " + m_curState);
-            m_states.Find(x => x.Id.Equals(m_curState)).HandleInput();
-            m_states.Find(x => x.Id.Equals(m_curState)).OnUpdate(gameTime);
+            _states.Find(x => x.Id.Equals(_curState)).HandleInput();
+            _states.Find(x => x.Id.Equals(_curState)).OnUpdate(gameTime);
 
-            if(m_states.Find(x => x.Id.Equals(m_curState)).IsRequestingGameExit())
-                m_exitGameRequest = true;
-            else if (m_states.Find(x => x.Id.Equals(m_curState)).IsRequestingStateChange())
+            if(_states.Find(x => x.Id.Equals(_curState)).IsRequestingGameExit())
+                _exitGameRequest = true;
+            else if (_states.Find(x => x.Id.Equals(_curState)).IsRequestingStateChange())
             {
-                SwitchState(m_states.Find(x => x.Id.Equals(m_curState)).GetRequestedStateName());
+                SwitchState(_states.Find(x => x.Id.Equals(_curState)).GetRequestedStateName());
             }
         }
         public void RegisterState(State newState)
         {
             // Debug.Assert(!m_states.Contains(x => x.Id.Equals(newState.Id)), "There is already state with ID " + newState.Id);
-            m_states.Add(newState);
-            m_states.Find(x => x.Id.Equals(newState.Id)).OnInit();
+            _states.Add(newState);
+            _states.Find(x => x.Id.Equals(newState.Id)).OnInit();
         }
         public void UnregisterState(string stateToRemove)
         {
             // Debug.Assert(m_states.Contains(x => x.Id.Equals(stateToRemove)), "There is no state with ID " + stateToRemove);
-            m_states.Find(x => x.Id.Equals(stateToRemove)).OnShutdown();
-            m_states.RemoveAll(x => x.Id.Equals(stateToRemove));
+            _states.Find(x => x.Id.Equals(stateToRemove)).OnShutdown();
+            _states.RemoveAll(x => x.Id.Equals(stateToRemove));
         }
 
         public void SwitchState( string newState )
         {
-            m_states.Find(x => x.Id.Equals(m_curState)).OnQuit();
-            m_states.Find(x => x.Id.Equals(m_curState)).ResetRequestStateChange();
-            m_states.Find(x => x.Id.Equals(newState)).OnEnter();
-            m_curState = newState;
+            _states.Find(x => x.Id.Equals(_curState)).OnQuit();
+            _states.Find(x => x.Id.Equals(_curState)).ResetRequestStateChange();
+            _states.Find(x => x.Id.Equals(newState)).OnEnter();
+            _curState = newState;
         }
 
         public void Start( string startState )
         {
-            m_states.Find(x => x.Id.Equals(startState)).OnEnter();
-            m_curState = startState;
+            _states.Find(x => x.Id.Equals(startState)).OnEnter();
+            _curState = startState;
         }
         public void Draw(ref SpriteBatch spriteBatch)
         {
-            m_states.Find(x => x.Id.Equals(m_curState)).OnDraw(ref spriteBatch);
+            _states.Find(x => x.Id.Equals(_curState)).OnDraw(ref spriteBatch);
         }
 
         public void LoadAssets(ContentManager content, GraphicsDevice graphics)
         {
-            foreach(var state in m_states)
+            foreach(var state in _states)
             {
                 state.OnLoad(content, graphics);
             }
         }
-        public bool IsRequestingGameExit(){ return m_exitGameRequest; }
+        public bool IsRequestingGameExit(){ return _exitGameRequest; }
     }
 }

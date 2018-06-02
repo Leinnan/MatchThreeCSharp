@@ -7,13 +7,13 @@ using System.Collections.Generic;
 namespace MonoGameCore {
     public abstract class State{
         public abstract string Id { get; }
-        private List<Keys> m_holdedKeys = new List<Keys> ();
-        private MouseState m_prevMouseState;
-        private bool m_exitGameRequest = false;
-        private string m_requestedStateChange = "";
-        private bool m_inputEnabled = true;
+        private List<Keys> _holdedKeys = new List<Keys> ();
+        private MouseState _prevMouseState;
+        private bool _exitGameRequest = false;
+        private string _requestedStateChange = "";
+        private bool _inputEnabled = true;
 
-        Vector2 m_pressedMousePos;
+        Vector2 _pressedMousePos;
 
         public abstract void OnInit();
         public abstract void OnShutdown();
@@ -33,73 +33,73 @@ namespace MonoGameCore {
         public virtual void OnMouseReleased (Vector2 mousePos, Vector2 movement) {}
 
         public void HandleInput () {
-            if(!m_inputEnabled)
+            if(!_inputEnabled)
                 return;
             HandleKeyboard ();
             HandleMouse ();
         }
-        public bool IsRequestingGameExit(){ return m_exitGameRequest; }
-        public void RequestGameExit(){ m_exitGameRequest = true; }
+        public bool IsRequestingGameExit(){ return _exitGameRequest; }
+        public void RequestGameExit(){ _exitGameRequest = true; }
 
         public void ResetRequestStateChange()
         {
-            m_requestedStateChange = "";
+            _requestedStateChange = "";
         }
 
         public bool IsRequestingStateChange()
         {
-            return m_requestedStateChange.Length > 0;
+            return _requestedStateChange.Length > 0;
         }
         public string GetRequestedStateName()
         {
-            return m_requestedStateChange;
+            return _requestedStateChange;
         }
 
         public void RequestStateChange(string name)
         {
-            m_requestedStateChange = name;
+            _requestedStateChange = name;
             
         }
-        public bool IsInputEnabled(){ return m_inputEnabled; }
-        public void EnableInput(){ m_inputEnabled = true; }
-        public void DisableInput(){ m_inputEnabled = false; }
+        public bool IsInputEnabled(){ return _inputEnabled; }
+        public void EnableInput(){ _inputEnabled = true; }
+        public void DisableInput(){ _inputEnabled = false; }
 
         protected void HandleKeyboard () {
             List<Keys> pressedKeys = new List<Keys> (Keyboard.GetState ().GetPressedKeys ());
 
             foreach (var key in pressedKeys) {
-                if (m_holdedKeys.Contains (key))
+                if (_holdedKeys.Contains (key))
                     OnKeyHold (key);
                 else {
                     OnKeyPressed (key);
-                    m_holdedKeys.Add (key);
+                    _holdedKeys.Add (key);
                 }
             }
 
-            foreach (var key in m_holdedKeys)
+            foreach (var key in _holdedKeys)
                 if (!pressedKeys.Contains (key))
                     OnKeyReleased (key);
 
-            m_holdedKeys.RemoveAll (key => !pressedKeys.Contains (key));
+            _holdedKeys.RemoveAll (key => !pressedKeys.Contains (key));
         }
 
         protected void HandleMouse () {
             MouseState currState = Mouse.GetState ();
             Vector2 movement = currState.Position.ToVector2 ();
-            if (m_prevMouseState.LeftButton == ButtonState.Pressed &&
+            if (_prevMouseState.LeftButton == ButtonState.Pressed &&
                 currState.LeftButton == ButtonState.Pressed) {
 
-                movement -= m_prevMouseState.Position.ToVector2 ();
+                movement -= _prevMouseState.Position.ToVector2 ();
                 OnMouseHold (currState.Position.ToVector2 (), movement);
-            } else if (m_prevMouseState.LeftButton == ButtonState.Pressed &&
+            } else if (_prevMouseState.LeftButton == ButtonState.Pressed &&
                 currState.LeftButton != ButtonState.Pressed) {
-                movement -= m_pressedMousePos;
+                movement -= _pressedMousePos;
                 OnMouseReleased (currState.Position.ToVector2 (), movement);
             } else if (currState.LeftButton == ButtonState.Pressed) {
                 OnMousePressed (currState.Position.ToVector2 ());
-                m_pressedMousePos = currState.Position.ToVector2 ();
+                _pressedMousePos = currState.Position.ToVector2 ();
             }
-            m_prevMouseState = Mouse.GetState ();
+            _prevMouseState = Mouse.GetState ();
         }
     }
 }
