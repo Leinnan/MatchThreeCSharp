@@ -169,6 +169,14 @@ namespace MonoGameCore
             for(int i=1;i<Constants.BoardSize-1;i++)
             {
                 // X axis
+                if (m_symbols[i,Constants.BoardSize-1].symbolType==m_symbols[i+1,Constants.BoardSize-1].symbolType &&
+                    m_symbols[i,Constants.BoardSize-1].symbolType==m_symbols[i-1,Constants.BoardSize-1].symbolType)
+                    for(int n=-1;n<=1;n++)
+                    {
+                        m_symbols[i+n,Constants.BoardSize-1].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+                // X axis
                 if (m_symbols[i,0].symbolType==m_symbols[i+1,0].symbolType &&
                     m_symbols[i,0].symbolType==m_symbols[i-1,0].symbolType)
                     for(int n=-1;n<=1;n++)
@@ -178,6 +186,14 @@ namespace MonoGameCore
                     }
 
                 // Y axis
+                if (m_symbols[Constants.BoardSize-1,i].symbolType==m_symbols[Constants.BoardSize-1,i+1].symbolType &&
+                    m_symbols[Constants.BoardSize-1,i].symbolType==m_symbols[Constants.BoardSize-1,i-1].symbolType)
+                    for(int n=-1;n<=1;n++) 
+                    {
+                        m_symbols[Constants.BoardSize-1,i+n].matching = true;
+                        m_matchingSymbolsAmount++;
+                    }
+                
                 if (m_symbols[0,i].symbolType==m_symbols[0,i+1].symbolType &&
                     m_symbols[0,i].symbolType==m_symbols[0,i-1].symbolType)
                     for(int n=-1;n<=1;n++) 
