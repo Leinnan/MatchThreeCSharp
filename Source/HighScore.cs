@@ -6,7 +6,7 @@ namespace MonoGameCore
 {
     public class HighScore
     {
-        public List<int> _bestScores { get; set; };
+        public List<int> _bestScores { get; set; }
         
         public HighScore()
         {
@@ -16,12 +16,12 @@ namespace MonoGameCore
 
         public void SortHighScore()
         {
-            _bestScores.OrderByDescending();
+            _bestScores.Sort((a, b) => a.CompareTo(b));
         }
         
         public void LoadFromFile()
         {
-            if( !File.Exist("myFileName.xml")
+            if( !File.Exists("myFileName.xml") )
             {
                 SaveToFile();
                 return;
@@ -29,7 +29,7 @@ namespace MonoGameCore
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<int>));
             var myFileStream = new FileStream("myFileName.xml", FileMode.Open);
             
-            _bestScores = (List<int>)serializer.Deserialize(myFileStream)
+            _bestScores = (List<int>)serializer.Deserialize(myFileStream);
             myFileStream.Close();
         }
 
@@ -38,7 +38,7 @@ namespace MonoGameCore
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<int>));
             var writer = new StreamWriter("myFileName.xml");
 
-            mySerializer.Serialize(writer, _bestScores);
+            serializer.Serialize(writer, _bestScores);
             writer.Close();
         }
     }
