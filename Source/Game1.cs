@@ -24,6 +24,7 @@ namespace MonoGameCore {
             m_stateHandler = new StateHandler();
             m_stateHandler.RegisterState(new GameState());
             m_stateHandler.RegisterState(new MenuState());
+            m_stateHandler.RegisterState(new HighScoreState());
             base.Initialize ();
         }
 
@@ -31,6 +32,7 @@ namespace MonoGameCore {
             m_stateHandler.LoadAssets(Content, GraphicsDevice);
             spriteBatch = new SpriteBatch (GraphicsDevice);
             m_stateHandler.Start("GameState");
+            m_stateHandler.Start("HighScoreState");
             m_stateHandler.Start("MenuState");
         }
 

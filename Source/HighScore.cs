@@ -12,7 +12,7 @@ namespace MonoGameCore
         
         public HighScore()
         {
-            _bestScores = new List<int>{0,5550,150,50,50};
+            _bestScores = new List<int>{10000,8000,6000,4000,20000,5000000,11111111,78011111,41312321};
             LoadFromFile();
             SortHighScore();
         }
@@ -53,13 +53,21 @@ namespace MonoGameCore
             _bestScores.Add(result);
             SortHighScore();
             _bestScores.RemoveAt(_bestScores.Count - 1);
-            foreach (var score in _bestScores)
-            {
-                Console.Write(Convert.ToString(score )+ ", ");
-            }
-            Console.Write("\n");
+            Console.Write(GetInStringFormat());
             SaveToFile();
 
+        }
+
+        public string GetInStringFormat()
+        {
+            string result = "HIGHSCORES\n";
+            int counter = 1;
+            foreach (var score in _bestScores)
+            {
+                result += Convert.ToString(counter) + ". " + Convert.ToString(score) + '\n';
+            }
+
+            return result;
         }
     }
 }
