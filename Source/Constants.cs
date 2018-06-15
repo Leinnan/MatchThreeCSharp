@@ -15,6 +15,8 @@ namespace MonoGameCore
         public const int BoardPosX = (ScreenWidth - BoardLength) / 2;
         public const int BoardPosY = 50;
 
+        public const string HighScoreXml = "myFileName.xml";
+
         public const string SwipeSound = "sfx/swipeEffect";
         public const string SwipeBackSound = "sfx/swipeBackEffect";
         public const string MatchingSound = "sfx/matchingEffect";

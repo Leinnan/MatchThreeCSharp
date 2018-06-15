@@ -13,16 +13,18 @@ namespace MonoGameCore {
         private SpriteFont _font;
         private Texture2D _background;
         private Texture2D _logo;
-        float _delay = 0.5f; 
+        private float _delay = 0.5f;
         
         public MenuState(){}
 
         public override void OnInit()
         {
         }
+        
         public override void OnShutdown()
         {
         }
+        
         public override void OnUpdate(GameTime gameTime)
         {
             if(_delay >= 0.0f)
