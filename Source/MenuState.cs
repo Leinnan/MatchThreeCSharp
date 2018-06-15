@@ -10,6 +10,9 @@ namespace MonoGameCore {
 
         private SpriteFont _font;
         private Texture2D _background;
+        FilledRectangle _veil;
+        private FilledRectangle _startGameBtnBg;
+        private FilledRectangle _highScoreBtnBg;
         private Texture2D _logo;
         private float _delay = 0.5f;
         
@@ -60,8 +63,17 @@ namespace MonoGameCore {
             }
         }
 
-        public override void OnMouseReleased (Vector2 mousePos, Vector2 movement) 
-        {}
+        public override void OnMouseReleased(Vector2 mousePos, Vector2 movement)
+        {
+            if (_startGameBtnBg.IsVectorInRectangle((int) mousePos.X, (int) mousePos.Y))
+            {
+                RequestStateChange("GameState");
+            }
+            else if(_highScoreBtnBg.IsVectorInRectangle((int) mousePos.X, (int) mousePos.Y))
+            {
+                RequestStateChange("HighScoreState");
+            }
+        }
         
         public override void OnLoad(ContentManager content, GraphicsDevice graphics)
         {
@@ -69,17 +81,40 @@ namespace MonoGameCore {
             _font = content.Load<SpriteFont>("Font"); // Use the name of your sprite font file here instead of 'Score'.
             _logo = content.Load<Texture2D>(Constants.MenuLogo);
             _background = content.Load<Texture2D>(Constants.IngameBg);
+            
+            _veil = new FilledRectangle(
+                new Vector2(0, 320), // position
+                new Vector2(Constants.ScreenWidth,Constants.ScreenHeight-320), // size
+                new Color(0,0,0,170));
+            _veil.GenerateTexture(graphics);
+            
+            _startGameBtnBg = new FilledRectangle(
+                new Vector2(20, 320 + 20), // position
+                new Vector2(Constants.ScreenWidth-40,210), // size
+                new Color(46,204,64,255));
+            _startGameBtnBg.GenerateTexture(graphics);
+            
+            _highScoreBtnBg = new FilledRectangle(
+                new Vector2(20, 320 + 20 + 210 + 20), // position
+                new Vector2(Constants.ScreenWidth-40,210), // size
+                new Color(0,116,217,255));
+            _highScoreBtnBg.GenerateTexture(graphics);
         }
+        
         public override void OnUnload(ContentManager content, GraphicsDevice graphics)
         {
-
         }
+        
         public override void OnDraw(ref SpriteBatch spriteBatch)
         {
             //Console.WriteLine("OnDraw"); 
             spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
             spriteBatch.Draw(_logo, GetCurrentLogoPos(), Color.White);
-            spriteBatch.DrawString(_font, "PRESS ANY KEY TO START GAME", new Vector2(30, 400), Color.Black);
+            _veil.Draw(ref spriteBatch);
+            _startGameBtnBg.Draw(ref spriteBatch);
+            _highScoreBtnBg.Draw(ref spriteBatch);
+            spriteBatch.DrawString(_font, "Start Game", new Vector2(130, 430), Color.WhiteSmoke);
+            spriteBatch.DrawString(_font, "HighScore", new Vector2(130, 620), Color.WhiteSmoke);
         }
 
         private Vector2 GetCurrentLogoPos()

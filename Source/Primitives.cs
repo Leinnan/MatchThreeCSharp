@@ -29,5 +29,10 @@ namespace MonoGameCore
         {
             spriteBatch.Draw(_txt,_rect,Color.White);
         }
+
+        public bool IsVectorInRectangle(int x, int y)
+        {
+            return _rect.Contains(x, y);
+        }
     }
 }
