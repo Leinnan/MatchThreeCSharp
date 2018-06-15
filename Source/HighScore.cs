@@ -14,11 +14,12 @@ namespace MonoGameCore
         {
             _bestScores = new List<int>{0,5550,150,50,50};
             LoadFromFile();
+            SortHighScore();
         }
 
-        public void SortHighScore()
+        void SortHighScore()
         {
-            _bestScores.Sort((a, b) => a.CompareTo(b));
+            _bestScores.Sort((a, b) => b.CompareTo(a));
         }
         
         public void LoadFromFile()
@@ -40,11 +41,25 @@ namespace MonoGameCore
         public void SaveToFile()
         {
             var serializer = new System.Xml.Serialization.XmlSerializer(typeof(List<int>));
-            var isoStream = new IsolatedStorageFileStream(Constants.HighScoreXml, FileMode.Create, _isoStore)
+            var isoStream = new IsolatedStorageFileStream(Constants.HighScoreXml, FileMode.Create, _isoStore);
             var writer = new StreamWriter(isoStream);
 
             serializer.Serialize(writer, _bestScores);
             writer.Close();
+        }
+
+        public void HandleNewScore(int result)
+        {
+            _bestScores.Add(result);
+            SortHighScore();
+            _bestScores.RemoveAt(_bestScores.Count - 1);
+            foreach (var score in _bestScores)
+            {
+                Console.Write(Convert.ToString(score )+ ", ");
+            }
+            Console.Write("\n");
+            SaveToFile();
+
         }
     }
 }

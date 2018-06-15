@@ -13,6 +13,7 @@ namespace MonoGameCore {
         public enum Substate {
             Idle,
             Swaping,
+            Check,
             Wining,
             SwapingBack,
             Dropping
@@ -81,7 +82,13 @@ namespace MonoGameCore {
                     _board.DestroyAllMatchingSymbols();
                     _matchingEffect.Play();
                     if(!_board.AreAnyAnimationInProgress())
-                        SwitchState(Substate.Idle);
+                        SwitchState(Substate.Check);
+                }
+                break;
+                case Substate.Check:
+                {
+                    _board.CalculateMatchingSymbols();
+                    SwitchState(_board.GetMatchingSymbolsAmount() > 0 ? Substate.Swaping : Substate.Idle);
                 }
                 break;
                 default:
@@ -94,12 +101,15 @@ namespace MonoGameCore {
         public override void OnEnter()
         {
             _delay = 0.5f;
-            Console.WriteLine("OnEnter"); 
+            Console.WriteLine("OnEnter");
+            _board.GenerateSymbolsTable();
 
         }
         public override void OnQuit()
         {
-            Console.WriteLine("OnQuit"); 
+            Console.WriteLine("OnQuit");
+            var newHighscore = new HighScore();
+            newHighscore.HandleNewScore(_score);
         }
 
         // input handling

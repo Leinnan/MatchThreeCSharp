@@ -67,7 +67,6 @@ namespace MonoGameCore
                 new Vector2(Constants.BoardLength,Constants.BoardLength), // size
                 new Color(0,0,0,200));
             m_background.GenerateTexture(graphics);
-            GenerateSymbolsTable();
         }
 
         // for now preconfigured, maybe in future I will move this config to file
@@ -80,7 +79,7 @@ namespace MonoGameCore
             }
         }
 
-        void GenerateSymbolsTable()
+        public void GenerateSymbolsTable()
         {
             for(int i = 0; i < Constants.BoardSize; i++)
             {
