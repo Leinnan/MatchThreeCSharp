@@ -12,7 +12,7 @@ namespace MonoGameCore
         
         public HighScore()
         {
-            _bestScores = new List<int>{10000,8000,6000,4000,20000,5000000,11111111,78011111,41312321};
+            _bestScores = new List<int>{10000,8000,6000,4000,20000,5000000,11111111,78011111,41312321,51412};
             LoadFromFile();
             SortHighScore();
         }
@@ -65,6 +65,7 @@ namespace MonoGameCore
             foreach (var score in _bestScores)
             {
                 result += Convert.ToString(counter) + ". " + Convert.ToString(score) + '\n';
+                counter++;
             }
 
             return result;
